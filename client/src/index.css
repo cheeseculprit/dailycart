@@ -53,6 +53,12 @@
 .dark .on-saffron { color-scheme: light; color: rgb(var(--c-ink)); }
 
 @layer base {
+  /* Phones: the page only scrolls up and down, never sideways. "clip" (unlike
+     "hidden") keeps sticky headers working. */
+  html,
+  body {
+    overflow-x: clip;
+  }
   body {
     @apply bg-cream text-ink antialiased;
     transition: background-color 0.25s ease, color 0.25s ease;
@@ -166,6 +172,62 @@
   background:
     radial-gradient(circle at 88% 0%, rgba(253, 203, 117, 0.16), transparent 45%),
     linear-gradient(165deg, rgba(255, 255, 255, 0.13) 0%, rgba(255, 255, 255, 0.04) 30%, transparent 50%);
+}
+
+/* ---------- Rainbow button (shop "Voice update") ----------
+   After Magic UI's Rainbow Button (magicui.design/docs/components/rainbow-button),
+   in light red and yellow: the colours flow slowly across the button, a blurred
+   copy glows underneath, and a light glass shine (about 20%) sits on top. */
+@keyframes rainbow-flow { from { background-position: 0% 50%; } to { background-position: 100% 50%; } }
+.rainbow-wrap { position: relative; display: inline-flex; }
+.rainbow-btn,
+.rainbow-glow {
+  background-image: linear-gradient(90deg, #fca5a5, #fdba74, #fde68a, #fdba74, #fca5a5);
+  background-size: 200% 100%;
+  animation: rainbow-flow 3s ease-in-out infinite alternate;
+}
+.rainbow-glow {
+  position: absolute;
+  inset: 40% 10% -5px;
+  border-radius: 9999px;
+  filter: blur(10px);
+  opacity: 0.75;
+  pointer-events: none;
+}
+.rainbow-btn {
+  position: relative;
+  overflow: hidden;
+  color: #6f1d18;
+  border: 1px solid rgba(255, 255, 255, 0.65);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.75),
+    inset 0 -1px 0 rgba(220, 80, 60, 0.18),
+    0 6px 16px -8px rgba(239, 68, 68, 0.5);
+}
+.rainbow-btn:hover { filter: saturate(1.15) brightness(1.03); }
+/* The glass: a soft shine over the top half, and a faint see-through frost. */
+.rainbow-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.12);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  pointer-events: none;
+}
+.rainbow-btn::after {
+  content: '';
+  position: absolute;
+  inset: 1px 1px 50% 1px;
+  border-radius: inherit;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0));
+  pointer-events: none;
+}
+.rainbow-btn > * { position: relative; z-index: 1; }
+.rainbow-btn:disabled { animation-play-state: paused; }
+.rainbow-wrap:has(.rainbow-btn:disabled) .rainbow-glow { animation-play-state: paused; opacity: 0.35; }
+@media (prefers-reduced-motion: reduce) {
+  .rainbow-btn, .rainbow-glow { animation: none; }
 }
 
 /* ---------- Shop sign-up map (Leaflet) ---------- */

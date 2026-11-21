@@ -1,6 +1,7 @@
 import { useLocation2 } from '../lib/location.jsx';
 import { Mascot } from './Brand.jsx';
 import { PinIcon } from './icons.jsx';
+import TextGenerate from './TextGenerate.jsx';
 
 /** Customers only see shops within walking range, so ask where they are first. */
 export default function LocationGate({ children }) {
@@ -12,7 +13,7 @@ export default function LocationGate({ children }) {
       <section className="relative grid overflow-hidden rounded-2xl bg-saffron-400 on-saffron sm:grid-cols-[1.4fr_1fr]">
         <div className="p-8 sm:p-12">
           <p className="text-xs font-bold uppercase tracking-wider text-maroon-700">Your neighbourhood, online</p>
-          <h1 className="mt-3 text-3xl font-extrabold leading-tight text-maroon-600 sm:text-5xl">Ghar ki zarooratein.<br />Bas, Dailykart se.</h1>
+          <TextGenerate as="h1" lines={['Ghar ki zarooratein.', 'Bas, Dailykart se.']} className="mt-3 text-3xl font-extrabold leading-tight text-maroon-600 sm:text-5xl" />
           <p className="mt-4 max-w-md text-ink/80">
             See what the shops around you have on the shelf right now. Reserve it, walk over, and pay at the counter.
           </p>

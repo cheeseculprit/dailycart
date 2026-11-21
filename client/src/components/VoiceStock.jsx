@@ -107,9 +107,14 @@ export default function VoiceStock({ onApplied }) {
           Stop · 0:0{Math.min(secs, MAX_SECS)}
         </button>
       ) : (
-        <button onClick={start} disabled={state === 'thinking' || state === 'applying'} className="btn-outline px-4 py-2">
-          <MicIcon className="h-4 w-4" />{state === 'thinking' ? 'Listening…' : 'Speak stock'}
-        </button>
+        // Red-and-yellow "rainbow" button with a light glass shine (styles in index.css).
+        <span className="rainbow-wrap">
+          <span className="rainbow-glow" aria-hidden="true" />
+          <button onClick={start} disabled={state === 'thinking' || state === 'applying'} className="btn rainbow-btn px-4 py-2">
+            <MicIcon className="h-4 w-4" />
+            <span>{state === 'thinking' ? 'Listening…' : 'Voice update'}</span>
+          </button>
+        </span>
       )}
 
       {state === 'recording' && (
