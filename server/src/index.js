@@ -23,7 +23,16 @@ app.use(cors());
 // at most every 15 s per instance, before reading or changing any stock.
 let expiryTimerRunning = false;
 let lastExpiryRun = 0;
+let schemaReady = false;
 app.use('/api', async (req, res, next) => {
+  if (!schemaReady) {
+    try {
+      await applySchema();
+      schemaReady = true;
+    } catch (e) {
+      console.error('[postgres] schema check failed:', e.message);
+    }
+  }
   if (!expiryTimerRunning && Date.now() - lastExpiryRun >= 15_000) {
     lastExpiryRun = Date.now();
     try {

@@ -4,7 +4,11 @@ import { api } from '../lib/api.js';
 // Google's own "Sign in with Google" button (Google Identity Services). The client ID
 // comes from /api/config, so the server's GOOGLE_CLIENT_ID is the only setting needed.
 let configPromise;
-const getClientId = () => (configPromise ||= api('/config').then((c) => c.googleClientId).catch(() => null));
+const getClientId = () =>
+  (configPromise ||= Promise.resolve(
+    import.meta.env.VITE_GOOGLE_CLIENT_ID ||
+    api('/config').then((c) => c.googleClientId).catch(() => null)
+  ));
 
 let scriptPromise;
 const loadGis = () => (scriptPromise ||= new Promise((resolve, reject) => {
