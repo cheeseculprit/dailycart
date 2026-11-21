@@ -7,6 +7,7 @@ import LocationGate from '../components/LocationGate.jsx';
 import ProductCard from '../components/ProductCard.jsx';
 import RadiusToggle, { fmtRadius } from '../components/RadiusToggle.jsx';
 import { Mascot } from '../components/Brand.jsx';
+import TextGenerate from '../components/TextGenerate.jsx';
 
 const CATS = ['Dairy', 'Bakery', 'Fruits & Veg', 'Snacks', 'Beverages', 'Ready to eat', 'Other'];
 
@@ -70,7 +71,7 @@ function HomeInner() {
         <div className="relative flex overflow-hidden rounded-2xl bg-saffron-400 on-saffron">
           <div className="relative z-10 p-6 sm:p-8">
             <p className="text-[11px] font-bold uppercase tracking-wider text-maroon-700">Fresh from your lane</p>
-            <h2 className="mt-2 text-2xl font-extrabold leading-tight text-maroon-600 sm:text-3xl">Ghar ki zarooratein.<br />Bas, Dailykart se.</h2>
+            <TextGenerate lines={['Ghar ki zarooratein.', 'Bas, Dailykart se.']} className="mt-2 text-2xl font-extrabold leading-tight text-maroon-600 sm:text-3xl" />
             <p className="mt-2 max-w-xs text-sm text-ink/80">Milk, bread, sabzi and snacks from shops you already trust.</p>
             <Link to="/search" className="btn-primary mt-5">Start your daily basket →</Link>
           </div>
@@ -133,9 +134,9 @@ function HomeInner() {
             <p className="mt-1 text-sm text-ink-soft">Know a shop nearby? Ask them to <Link to="/shop/login?register=1" className="link">list their dukaan</Link>.</p>
           </div>
         ) : (
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {shops.map((s) => (
-              <Link key={s.id} to={`/shops/${s.id}`} className="flex gap-3 rounded-xl border border-cream-line bg-white p-3 hover:border-saffron-400">
+              <Link key={s.id} to={`/shops/${s.id}`} className="flex min-w-0 gap-3 rounded-xl border border-cream-line bg-white p-3 hover:border-saffron-400">
                 <div className="grid h-14 w-14 shrink-0 place-items-center rounded-lg bg-saffron-50 text-2xl">🏪</div>
                 <div className="min-w-0 flex-1">
                   <h3 className="truncate font-semibold">{s.name}</h3>

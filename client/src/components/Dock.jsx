@@ -89,7 +89,7 @@ export default function AppDock() {
   const icon = 'h-[46%] w-[46%]';
 
   return (
-    <div className="pointer-events-none fixed inset-x-0 bottom-3 z-40 flex justify-center px-3 sm:bottom-5">
+    <div className="pointer-events-none fixed inset-x-0 bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-40 flex justify-center px-3 sm:bottom-5">
       <Dock>
         {isShop ? (
           <DockIcon to="/shop/dashboard" label="Dashboard"><StoreIcon className={icon} /></DockIcon>

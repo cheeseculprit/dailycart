@@ -1,12 +1,21 @@
 import { useState } from 'react';
 
-export function Logo({ light = false, small = false }) {
+export function Logo({ light = false, small = false, taglineFromSm = false }) {
   return (
     <span className="inline-flex flex-col leading-none">
       <span className={`font-brand ${small ? 'text-2xl' : 'text-3xl'} ${light ? 'text-white' : 'text-maroon-600'}`}>Dailykart</span>
-      <span className={`mt-0.5 text-[10px] font-medium tracking-wide ${light ? 'text-white/90' : 'text-ink-soft'}`}>
+      <span className={`mt-0.5 text-[10px] font-medium tracking-wide ${light ? 'text-white/90' : 'text-ink-soft'} ${taglineFromSm ? 'hidden sm:block' : ''}`}>
         Shopping Nayi, Bharosa Wahi!
       </span>
+    </span>
+  );
+}
+
+/** Just the "D" of the logo, for when the header is squeezed. */
+export function LogoMark() {
+  return (
+    <span className="grid h-9 w-9 place-items-center rounded-xl bg-maroon-600 font-brand text-xl leading-none text-white shadow-sm" aria-label="Dailykart">
+      D
     </span>
   );
 }
