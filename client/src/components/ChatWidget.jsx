@@ -6,7 +6,14 @@ import { useUI } from '../lib/ui.jsx';
 import { ExpandIcon, HelpHandsIcon, MinimizeIcon, SendIcon, XIcon } from './icons.jsx';
 
 const KEY = 'dailycart.chat';
-const load = () => { try { return JSON.parse(sessionStorage.getItem(KEY)) || []; } catch { return []; } };
+const load = () => {
+  try {
+    const list = JSON.parse(sessionStorage.getItem(KEY)) || [];
+    return list.filter((m) => !m.error);
+  } catch {
+    return [];
+  }
+};
 
 const SUGGESTIONS = {
   customer: ["What's expiring soon near me?", 'How do I reserve items?', "Where's my order?"],

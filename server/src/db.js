@@ -19,9 +19,9 @@ const connectionString = config.pg.connectionString.replace(/([?&])sslmode=[^&]*
 export const pool = new pg.Pool({
   connectionString,
   ssl: sslOptions(),
-  max: 10,
+  max: process.env.VERCEL ? 1 : 10,
   // Close unused connections ourselves before the network or Aiven cuts them.
-  idleTimeoutMillis: 30_000,
+  idleTimeoutMillis: process.env.VERCEL ? 5_000 : 30_000,
   // Small "still here" packets so live connections aren't treated as dead.
   keepAlive: true,
   keepAliveInitialDelayMillis: 10_000,
