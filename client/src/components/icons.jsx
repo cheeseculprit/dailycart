@@ -28,7 +28,31 @@ export const ReceiptIcon = (p) => <Svg {...p}><path d="M6 3h12v18l-3-2-3 2-3-2-3
 export const HelpHandsIcon = (p) => <Svg {...p}><path d="M12 4c-1.3 1.6-2.2 4-2.2 6.6v3.2L6 17.6a1.4 1.4 0 0 0 0 2L7.4 21H12" /><path d="M12 4c1.3 1.6 2.2 4 2.2 6.6v3.2l3.8 3.8a1.4 1.4 0 0 1 0 2L16.6 21H12" /><path d="M12 4v17" /></Svg>;
 export const MoonIcon = (p) => <Svg {...p}><path d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5z" /></Svg>;
 export const SunIcon = (p) => <Svg {...p}><circle cx="12" cy="12" r="4" /><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" /></Svg>;
-export const ChevronDownIcon = (p) => <Svg {...p}><path d="m6 9 6 6 6-6" /></Svg>;
+/* ---------- Shop categories ---------- */
+export const MilkIcon = (p) => <Svg {...p}><path d="M9 2h6M10 2v3L8 8.5V20a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2V8.5L14 5V2" /><path d="M8 13h8" /></Svg>;
+export const BreadIcon = (p) => <Svg {...p}><path d="M6 11a4 4 0 1 1 0-8h12a4 4 0 1 1 0 8v9a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1z" /><path d="m10 8-1.5 2.5M14 8l-1.5 2.5" /></Svg>;
+export const AppleIcon = (p) => <Svg {...p}><path d="M12 7.5c-1.6-1.3-3.6-1.5-5.1-.5C4 9 4.6 14.4 7 18.2c1.3 2 3 3 5 2.1 2 .9 3.7-.1 5-2.1 2.4-3.8 3-9.2.1-11.2-1.5-1-3.5-.8-5.1.5z" /><path d="M12 7.5c0-2.2 1-4 3-5" /></Svg>;
+export const CookieIcon = (p) => <Svg {...p}><circle cx="12" cy="12" r="9" /><path d="M8.5 9h.01M14.5 8h.01M15.5 13.5h.01M10 15.5h.01M12 11.5h.01" strokeWidth="2.6" /></Svg>;
+export const DrinkIcon = (p) => <Svg {...p}><path d="M6 8h12l-1.4 12.2a2 2 0 0 1-2 1.8H9.4a2 2 0 0 1-2-1.8z" /><path d="M5 8h14M13 8l1.6-6H18" /></Svg>;
+export const BowlIcon = (p) => <Svg {...p}><path d="M3 12h18a9 9 0 0 1-18 0z" /><path d="M9 3c-1 1.5 1 2.5 0 4.5M14 3c-1 1.5 1 2.5 0 4.5" /></Svg>;
+export const BagIcon = (p) => <Svg {...p}><path d="M5 8h14l-1 13H6z" /><path d="M9 8V6.5a3 3 0 0 1 6 0V8" /></Svg>;
+
+const CATEGORY_ICONS = {
+  Dairy: MilkIcon,
+  Bakery: BreadIcon,
+  'Fruits & Veg': AppleIcon,
+  Snacks: CookieIcon,
+  Beverages: DrinkIcon,
+  'Ready to eat': BowlIcon,
+};
+/** Line icon for a shop category (shopping bag for anything else). */
+export const CategoryIcon = ({ category, ...p }) => {
+  const Icon = CATEGORY_ICONS[category] || BagIcon;
+  return <Icon {...p} />;
+};
+
+export const ArrowRightIcon =(p) => <Svg {...p}><path d="M5 12h14M13 6l6 6-6 6" /></Svg>;
+export const ChevronDownIcon =(p) => <Svg {...p}><path d="m6 9 6 6 6-6" /></Svg>;
 export const MicIcon = (p) => <Svg {...p}><rect x="9" y="3" width="6" height="11" rx="3" /><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21M9 21h6" /></Svg>;
 export const SendIcon =(p) => <Svg {...p}><path d="M4 12 20 4l-6 16-3-7z" /></Svg>;
 export const BellIcon =(p) => <Svg {...p}><path d="M6 16V11a6 6 0 1 1 12 0v5l1.5 2h-15zM10 21h4" /></Svg>;

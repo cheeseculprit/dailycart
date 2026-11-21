@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { api, metres, walkMins, hoursLabel, CATEGORY_EMOJI } from '../lib/api.js';
+import { api, metres, walkMins, hoursLabel } from '../lib/api.js';
 import { useAuth } from '../lib/auth.jsx';
 import { useLocation2 } from '../lib/location.jsx';
 import LocationGate from '../components/LocationGate.jsx';
@@ -8,6 +8,7 @@ import ProductCard from '../components/ProductCard.jsx';
 import RadiusToggle, { fmtRadius } from '../components/RadiusToggle.jsx';
 import { Mascot } from '../components/Brand.jsx';
 import TextGenerate from '../components/TextGenerate.jsx';
+import { ArrowRightIcon, CategoryIcon } from '../components/icons.jsx';
 
 const CATS = ['Dairy', 'Bakery', 'Fruits & Veg', 'Snacks', 'Beverages', 'Ready to eat', 'Other'];
 
@@ -20,6 +21,20 @@ function SectionHead({ title, sub, action }) {
       </div>
       {action}
     </div>
+  );
+}
+
+/** Round arrow button for "see everything" links; the words are for screen readers and the tooltip. */
+function SeeAll({ to, label }) {
+  return (
+    <Link
+      to={to}
+      aria-label={label}
+      title={label}
+      className="group grid h-9 w-9 shrink-0 place-items-center rounded-full border border-cream-line bg-white text-ink shadow-card transition hover:border-saffron-400 hover:bg-saffron-50 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-saffron-300"
+    >
+      <ArrowRightIcon className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+    </Link>
   );
 }
 
@@ -91,11 +106,13 @@ function HomeInner() {
 
       {/* Categories */}
       <section className="mt-8">
-        <SectionHead title="What's on your list today?" sub="Shop by category" action={<Link to="/search" className="link text-sm">Shop all →</Link>} />
+        <SectionHead title="What's on your list today?" sub="Shop by category" action={<SeeAll to="/search" label="Shop all categories" />} />
         <div className="no-scrollbar -mx-4 flex gap-3 overflow-x-auto px-4 pb-1 sm:mx-0 sm:grid sm:grid-cols-7 sm:px-0">
           {CATS.map((c) => (
-            <Link key={c} to={`/search?category=${encodeURIComponent(c)}`} className="flex w-24 shrink-0 flex-col items-center gap-2 rounded-xl border border-cream-line bg-white p-3 text-center hover:border-saffron-400 sm:w-auto">
-              <span className="grid h-14 w-14 place-items-center rounded-lg bg-cream text-3xl" aria-hidden="true">{CATEGORY_EMOJI[c]}</span>
+            <Link key={c} to={`/search?category=${encodeURIComponent(c)}`} className="group flex w-24 shrink-0 flex-col items-center gap-2 rounded-xl border border-cream-line bg-white p-3 text-center hover:border-saffron-400 sm:w-auto">
+              <span className="grid h-14 w-14 place-items-center rounded-full bg-maroon-600 text-white shadow-lift transition group-hover:scale-105 group-hover:bg-maroon-700" aria-hidden="true">
+                <CategoryIcon category={c} className="h-6 w-6" />
+              </span>
               <span className="text-xs font-semibold">{c}</span>
             </Link>
           ))}
@@ -107,7 +124,7 @@ function HomeInner() {
         {showRepeat ? (
           <SectionHead title="Repeat order" sub="Things you've reserved before, available near you now" action={<Link to="/orders" className="link text-sm">My orders →</Link>} />
         ) : (
-          <SectionHead title="Everyday favourites" sub="Freshest first: grab these before they're gone" action={<Link to="/search" className="link text-sm">View all →</Link>} />
+          <SectionHead title="Everyday favourites" sub="Freshest first: grab these before they're gone" action={<SeeAll to="/search" label="View all products" />} />
         )}
         {loading ? (
           <Skeleton />
