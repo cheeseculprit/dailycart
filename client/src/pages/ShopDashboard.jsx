@@ -420,10 +420,7 @@ export default function ShopDashboard() {
                     <ul className="mt-2 text-sm text-ink-soft">
                       {f.items.map((i) => <li key={i.productId}>{i.qty} × {i.name}</li>)}
                     </ul>
-                    <div className="mt-3 flex items-center justify-between">
-                      <span className="font-extrabold">{rupees(f.total)}</span>
-                      <button onClick={() => collect({ id: f.id })} className="btn bg-leaf-500 px-3 py-2 text-white hover:bg-leaf-600/90"><CheckIcon className="h-4 w-4" />Paid &amp; collected</button>
-                    </div>
+                    <p className="mt-3 font-extrabold">{rupees(f.total)}</p>
                   </li>
                 ))}
               </ul>
