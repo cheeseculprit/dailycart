@@ -36,7 +36,7 @@ export async function createFreeze(user, shopId, items, from = null) {
     if (!u) throw new HttpError(401, 'Account not found');
 
     const { rows: [{ count }] } = await c.query(
-      `SELECT count(*)::int AS count FROM freezes WHERE user_id = $1 AND status = 'active'`,
+      `SELECT count(*)::int AS count FROM freezes WHERE user_id = $1 AND status = 'active' AND expires_at > now()`,
       [user.id]
     );
     if (count >= config.freeze.maxActivePerUser)

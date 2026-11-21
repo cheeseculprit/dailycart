@@ -17,6 +17,24 @@ import { HttpError } from './auth.js';
 
 const app = express();
 app.use(cors());
+
+// Release reservations whose time ran out. A normal server does this on a 15 s timer
+// (see start()); on Vercel nothing runs between requests, so requests do it instead,
+// at most every 15 s per instance, before reading or changing any stock.
+let expiryTimerRunning = false;
+let lastExpiryRun = 0;
+app.use('/api', async (req, res, next) => {
+  if (!expiryTimerRunning && Date.now() - lastExpiryRun >= 15_000) {
+    lastExpiryRun = Date.now();
+    try {
+      const n = await expireDueFreezes();
+      if (n) console.log(`[expiry] released ${n} freeze(s) on request`);
+    } catch (e) {
+      console.error('[expiry]', e.message);
+    }
+  }
+  next();
+});
 // Photo uploads need a bigger body than normal requests.
 app.use('/api/shop/images', express.json({ limit: '1mb' }));
 app.use(express.json({ limit: '100kb' }));
@@ -55,6 +73,7 @@ async function start() {
     console.error('[kafka] the app will run, but events and search sync are off until Kafka is reachable.');
   }
 
+  expiryTimerRunning = true;
   setInterval(() => {
     expireDueFreezes()
       .then((n) => n && console.log(`[expiry] released ${n} freeze(s)`))

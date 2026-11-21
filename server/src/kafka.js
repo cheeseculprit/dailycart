@@ -1,5 +1,6 @@
 import { Kafka, logLevel } from 'kafkajs';
 import { config } from './config.js';
+import { handleEvent } from './events.js';
 
 const k = config.kafka;
 
@@ -55,26 +56,21 @@ export async function connectProducer() {
 
 /**
  * Publish an event. Called after the Postgres transaction commits, so the
- * database is always the source of truth; a failed publish is logged, and the
- * reindex script can repair the search index.
+ * database is always the source of truth. When Kafka isn't available (on
+ * Vercel nothing connects it, or the broker is down) the event is handled
+ * right here instead, so search and notifications stay up to date.
  */
 export async function publish(topic, type, payload, key) {
-  if (!producerReady) {
-    console.warn(`[kafka] producer not ready, dropped ${type}`);
-    return;
-  }
+  const evt = { type, at: new Date().toISOString(), ...payload };
+  if (!producerReady) return handleEvent(topic, evt, 'inline');
   try {
     await producer.send({
       topic,
-      messages: [
-        {
-          key: key != null ? String(key) : undefined,
-          value: JSON.stringify({ type, at: new Date().toISOString(), ...payload }),
-        },
-      ],
+      messages: [{ key: key != null ? String(key) : undefined, value: JSON.stringify(evt) }],
     });
   } catch (err) {
-    console.error(`[kafka] failed to publish ${type}:`, err.message);
+    console.error(`[kafka] failed to publish ${type}, handling it inline:`, err.message);
+    await handleEvent(topic, evt, 'inline');
   }
 }
 

@@ -4,7 +4,7 @@ import { query } from './db.js';
 import { config } from './config.js';
 import { signToken, requireAuth, HttpError, wrap } from './auth.js';
 import { publish, TOPICS } from './kafka.js';
-import { searchProducts, os, syncProduct } from './search.js';
+import { searchProducts, os } from './search.js';
 import { kafkaStatus } from './status.js';
 import { reserveWindow, readHours } from './hours.js';
 import { transcribe, parseStock, voiceTooMany, MAX_BYTES } from './voice.js';
@@ -382,16 +382,6 @@ r.patch('/shop/hours', shopOnly, wrap(async (req, res) => {
   res.json({ shop: updated, reserve: reserveWindow(updated, 0) });
 }));
 
-/**
- * Update the search index inside the request, so changes show even where the
- * Kafka consumer isn't running (e.g. serverless hosting). The consumer still
- * runs as a backup when it is available; a search hiccup never fails the write.
- */
-async function syncNow(id) {
-  try { await syncProduct(id); }
-  catch (e) { console.error('[search] immediate sync failed:', e.message); }
-}
-
 /** Record a shopkeeper's stock change for the activity feed. Never fails the change itself. */
 async function logStock(shopId, product, action, delta = null) {
   try {
@@ -458,7 +448,6 @@ r.post('/shop/products', shopOnly, wrap(async (req, res) => {
     [shop.id, p.name, p.brand || null, p.category, p.unit || '1 pc', p.price, p.stock, p.expires_on || null, p.image_id ?? null]
   );
   await publish(TOPICS.inventory, 'inventory.changed', { reason: 'product.added', productIds: [created.id] }, shop.id);
-  await syncNow(created.id);
   await logStock(shop.id, created, 'added');
   res.status(201).json(created);
 }));
@@ -477,7 +466,6 @@ r.patch('/shop/products/:id', shopOnly, wrap(async (req, res) => {
   );
   if (!updated) throw new HttpError(404, 'Product not found');
   await publish(TOPICS.inventory, 'inventory.changed', { reason: 'product.updated', productIds: [updated.id] }, shop.id);
-  await syncNow(updated.id);
   await logStock(shop.id, updated, 'edited', before ? updated.stock - before.stock : null);
   res.json(updated);
 }));
@@ -494,7 +482,6 @@ r.post('/shop/products/:id/adjust', shopOnly, wrap(async (req, res) => {
   );
   if (!p) throw new HttpError(404, 'Product not found');
   await publish(TOPICS.inventory, 'inventory.changed', { reason: 'counter.adjust', productIds: [p.id] }, shop.id);
-  await syncNow(p.id);
   await logStock(shop.id, p, 'adjusted', delta);
   res.json(p);
 }));
@@ -513,7 +500,6 @@ r.delete('/shop/products/:id', shopOnly, wrap(async (req, res) => {
   if (!gone) throw new HttpError(404, 'Product not found');
   await logStock(shop.id, gone, 'removed');
   await publish(TOPICS.inventory, 'inventory.changed', { reason: 'product.removed', productIds: [id] }, shop.id);
-  await syncNow(id);
   res.json({ ok: true, hidden: Boolean(busy) });
 }));
 
